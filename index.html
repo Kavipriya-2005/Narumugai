@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Narumugai - Premium Florist</title>
+  <link rel="service-worker" href="service-worker.js">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Hero background -->
+<div style="background-image: url('./images/white-flowers.jpg')"></div>
+
+  <!-- iOS Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Narumugai">
+  <meta name="theme-color" content="#722F37">
+  
+  <!-- Android Meta Tags -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Narumugai">
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">
+          <i class="fas fa-spa"></i> Narumugai
+        </div>
+        <div class="nav-links">
+          <a href="#home" class="active">Home</a>
+          <a href="#products">Flowers</a>
+          <a href="#features">Services</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="cart-icon" id="cartIcon">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container">
+      <h1>Fresh Flowers, Timeless Beauty</h1>
+      <p>Handcrafted arrangements for every occasion. Delivered with passion.</p>
+      <a href="#products" class="btn">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- Products -->
+  <section id="products">
+    <div class="container">
+      <h2 class="section-title">Our Collections</h2>
+      <div class="products">
+        
+        <div class="product-card">
+          <img src="https://i.pinimg.com/736x/4f/3a/06/4f3a066aae291354bbde4961b42bfa15.jpg" 
+               alt="Eternal Jasmine" class="product-img">
+          <div class="product-info">
+            <h3 class="product-name">Eternal Jasmine</h3>
+            <p class="product-price">100</p>
+            <button class="btn add-to-cart" data-id="1">Add to Cart</button>
+          </div>
+        </div>
+        
+        <div class="product-card">
+          <img src="https://i.pinimg.com/736x/ec/2b/e6/ec2be627fe9c6a50eddbf358f073fd1c.jpg" 
+               alt="Royal Roses" class="product-img">
+          <div class="product-info">
+            <h3 class="product-name">Royal Roses</h3>
+            <p class="product-price">200</p>
+            <button class="btn add-to-cart" data-id="2">Add to Cart</button>
+          </div>
+        </div>
+        
+        <div class="product-card">
+          <img src="https://i.pinimg.com/736x/0d/50/8b/0d508be45c89b44d895b2292693ce6b9.jpg" 
+               alt="Blue Kurunji" class="product-img">
+          <div class="product-info">
+            <h3 class="product-name">Blue Kurunji</h3>
+            <p class="product-price">300</p>
+            <button class="btn add-to-cart" data-id="3">Add to Cart</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features" id="features">
+    <div class="container">
+      <h2 class="section-title" style="color:#fff;">Why Choose Us</h2>
+      <div class="feature-grid">
+        <div class="feature">
+          <i class="fas fa-shipping-fast"></i>
+          <h3>Same Day</h3>
+          <p>Delivery in 4 hours</p>
+        </div>
+        <div class="feature">
+          <i class="fas fa-leaf"></i>
+          <h3>Eco-Friendly</h3>
+          <p>Sustainable sourcing</p>
+        </div>
+        <div class="feature">
+          <i class="fas fa-award"></i>
+          <h3>Expert Crafted</h3>
+          <p>Professional florists</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Narumugai</h3>
+          <p>Premium flowers since 2005</p>
+        </div>
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <p>123 Flower St, Theni<br>
+          +91 98765 43210</p>
+        </div>
+      </div>
+      <p class="copyright" style="text-align:center;margin-top:30px;">
+        &copy; 2026 Narumugai Florist
+      </p>
+    </div>
+  </footer>
+
+  <!-- Install Button (Hidden by default) -->
+  <button class="btn install-btn" id="installBtn" style="display: none;">
+    <i class="fas fa-download"></i> Install App
+  </button>
+
+  <!-- Script -->
+  <script>
+    // Cart data
+    let cart = JSON.parse(localStorage.getItem('narumugaiCart')) || [];
+    const products = [
+      {id: 1, name: "Eternal Jasmine", price: 100},
+      {id: 2, name: "Royal Roses", price: 200},
+      {id: 3, name: "Blue Kurunji", price: 300}
+    ];
+
+    // DOM Elements
+    const cartIcon = document.getElementById('cartIcon');
+    const cartCount = document.getElementById('cartCount');
+    const installBtn = document.getElementById('installBtn');
+
+    // Update cart display
+    function updateCart() {
+      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      cartCount.textContent = totalItems;
+      localStorage.setItem('narumugaiCart', JSON.stringify(cart));
+    }
+
+    // Add to cart functionality
+    document.querySelectorAll('.add-to-cart').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const productId = parseInt(this.dataset.id);
+        const product = products.find(p => p.id === productId);
+        
+        // Check if already in cart
+        const existingItem = cart.find(item => item.id === productId);
+        
+        if (existingItem) {
+          existingItem.quantity++;
+        } else {
+          cart.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: 1
+          });
+        }
+        
+        updateCart();
+        alert(`${product.name} added to cart!`);
+      });
+    });
+
+    // Initialize cart
+    updateCart();
+
+    // ========== PWA INSTALLATION ==========
+    let deferredPrompt;
+
+    // Listen for beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      // Show our install button
+      installBtn.style.display = 'block';
+    });
+
+    // Install button click handler
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        // Show the install prompt
+        deferredPrompt.prompt();
+        
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        if (outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+          installBtn.style.display = 'none';
+          alert('App installed successfully!');
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+        
+        deferredPrompt = null;
+      }
+    });
+
+    // Hide install button when app is installed
+    window.addEventListener('appinstalled', () => {
+      installBtn.style.display = 'none';
+      deferredPrompt = null;
+    });
+
+    // ========== SERVICE WORKER REGISTRATION ==========
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(registration => {
+            console.log('ServiceWorker registered:', registration);
+          })
+          .catch(error => {
+            console.log('ServiceWorker registration failed:', error);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
